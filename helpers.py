@@ -99,3 +99,36 @@ def get_accuracy(results, ground_truth):
     
     accuracy = (match_count)/(gen_count)
     return accuracy
+
+def get_f1_score(results, ground_truth):
+    """Computes the F1 score between the LLM-generated results and the ground truth data
+    
+    Parameters:
+    - results (list[bool]) - True/False of whether malicious information was detected by the LLM (note
+    preprocessing might be necessary)
+    - ground_truth (list[bool]) - True/False list of whether malicious information was actually in the
+    conversation.
+    
+    Returns:
+    - f1_score (float) - Returns the F1 score between the LLM-generated response and ground truth."""
+    
+    gen_count = 0
+    
+    true_positive = 0
+    false_positive = 0
+    false_negative = 0
+
+    for entry in results:
+        if results[gen_count] == ground_truth[gen_count]:
+            if results[gen_count] == True:
+                true_positive = true_positive + 1
+        else:
+            if results[gen_count] == True:
+                false_positive = false_positive + 1
+            else:
+                false_negative = false_negative + 1
+                
+        gen_count = gen_count + 1
+    
+    f1_score = (true_positive)/(true_positive + (0.5 * (false_positive + false_negative)))
+    return f1_score
